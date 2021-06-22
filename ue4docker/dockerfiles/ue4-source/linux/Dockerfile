@@ -68,7 +68,7 @@ RUN python3 /tmp/patch-broken-releases.py /home/ue4/UnrealEngine $VERBOSE_OUTPUT
 # Run post-clone setup steps, ensuring our package lists are up to date since Setup.sh doesn't call `apt-get update`
 # (Note that the `-no-cache` flag disables caching of dependency data in `.git/ue4-gitdeps`, saving disk space)
 WORKDIR /home/ue4/UnrealEngine
-RUN sudo apt-get update && \
+RUN sudo http_proxy=$http_proxy apt-get update && \
 	./Setup.sh -no-cache && \
 	sudo rm -rf /var/lib/apt/lists/*
 

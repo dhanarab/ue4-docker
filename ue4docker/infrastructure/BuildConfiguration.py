@@ -99,6 +99,7 @@ class BuildConfiguration(object):
 		parser.add_argument('-password', default=None, help='Specify the password or access token to use when cloning the git repository')
 		parser.add_argument('-repo', default=None, help='Set the custom git repository to clone when "custom" is specified as the release value')
 		parser.add_argument('-branch', default=None, help='Set the custom branch/tag to clone when "custom" is specified as the release value')
+		parser.add_argument('-proxy', default=None, help='Set http proxy used for building images')
 		parser.add_argument('-isolation', default=None, help='Set the isolation mode to use for Windows containers (process or hyperv)')
 		parser.add_argument('-basetag', default=None, help='Windows Server Core base image tag to use for Windows containers (default is the host OS version)')
 		parser.add_argument('-dlldir', default=None, help='Set the directory to copy required Windows DLLs from (default is the host System32 directory)')
@@ -155,6 +156,8 @@ class BuildConfiguration(object):
 			self.repository = DEFAULT_GIT_REPO
 			self.branch = '{}-release'.format(self.release)
 			self.custom = False
+
+		self.proxy = self.args.proxy
 		
 		# Store our common configuration settings
 		self.containerPlatform = 'windows' if platform.system() == 'Windows' and self.args.linux == False else 'linux'

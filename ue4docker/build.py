@@ -236,6 +236,8 @@ def build():
 			
 			# Keep track of the images we've built
 			builtImages = []
+
+			httpProxyArgs = ['--build-arg', 'http_proxy={}'.format(config.proxy if config.proxy is not None else [])]
 			
 			# Compute the build options for the UE4 build prerequisites image
 			# (This is the only image that does not use any user-supplied tag suffix, since the tag always reflects any customisations)
@@ -250,7 +252,7 @@ def build():
 			if config.layoutDir is None and config.pullPrerequisites == True:
 				builder.pull('adamrehn/ue4-build-prerequisites:{}'.format(config.prereqsTag))
 			else:
-				builder.build('adamrehn/ue4-build-prerequisites', [config.prereqsTag], config.platformArgs + prereqsArgs)
+				builder.build('adamrehn/ue4-build-prerequisites', [config.prereqsTag], config.platformArgs + prereqsArgs + httpProxyArgs)
 				builtImages.append('ue4-build-prerequisites')
 			
 			# If we're using build secrets then pass the Git username and password to the UE4 source image as secrets
@@ -269,7 +271,7 @@ def build():
 				'--build-arg', 'GIT_BRANCH={}'.format(config.branch),
 				'--build-arg', 'VERBOSE_OUTPUT={}'.format('1' if config.verbose == True else '0')
 			]
-			builder.build('ue4-source', mainTags, config.platformArgs + ue4SourceArgs + credentialArgs, secrets)
+			builder.build('ue4-source', mainTags, config.platformArgs + ue4SourceArgs + credentialArgs + httpProxyArgs, secrets)
 			builtImages.append('ue4-source')
 			
 			# Build the UE4 Engine source build image, unless requested otherwise by the user
